@@ -3,6 +3,8 @@ library(tidyverse)
 library(nflfastR)
 library(broom)
 
+nflreadr::.clear_cache()
+
 ## load data and filter data
 chap_5_file <- "./data/pbp_r_chap_5.csv"
 if (!file.exists(chap_5_file)) {
@@ -11,7 +13,6 @@ if (!file.exists(chap_5_file)) {
 } else {
     pbp_r <- read_csv(chap_5_file)
 }
-
 
 pbp_r_pass <-
     pbp_r |>
@@ -57,6 +58,11 @@ pbp_r_pass <-
         cpoe = complete_pass - exp_completion
     )
 
+## better understand complete_pass, for my own understanding
+pbp_r_pass %>% 
+  slice(1:20) %>% 
+  select(passer, complete_pass, air_yards)
+
 ## cpoe
 pbp_r_pass |>
     group_by(season, passer_id, passer) |>
@@ -68,7 +74,7 @@ pbp_r_pass |>
     ) |>
     filter(n >= 100) |>
     arrange(-cpoe) |>
-    print(n = 20)
+    print(n = 40)
 
 ## remove missing data and format
 pbp_r_pass_no_miss <-
@@ -92,6 +98,7 @@ complete_more_r <-
             yardline_100 + air_yards + pass_location + qb_hit,
         family = "binomial"
     )
+summary(complete_more_r)
 
 ## cpoe
 pbp_r_pass_no_miss <-
@@ -117,7 +124,7 @@ cpoe_more_r <-
 ## print outputs
 cpoe_more_r |>
     arrange(-cpoe) |>
-    print(n = 20)
+    print(n = 40)
 
 ## stability
 # create current dataframe
@@ -132,7 +139,8 @@ cpoe_last_r <-
     select(-n) |>
     mutate(season = season + 1) |>
     rename(
-        cpoe_last = cpoe, compl_last = compl,
+        cpoe_last = cpoe, 
+        compl_last = compl,
         exp_completion_last = exp_completion
     )
 
