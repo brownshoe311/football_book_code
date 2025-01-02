@@ -3,6 +3,8 @@ library(nflfastR)
 library(tidyverse)
 library(broom)
 
+nflreadr::.clear_cache()
+
 ## load data
 chap_6_file <- "./data/pbp_r_chap_6.csv"
 if (!file.exists(chap_6_file)) {
@@ -53,6 +55,7 @@ ggplot() +
     geom_histogram(
         data = pbp_r_pass_td_y,
         aes(x = pass_td_y, y = after_stat(count / sum(count))),
+        color = "green",
         binwidth = 0.5
     ) +
     geom_line(
@@ -136,7 +139,7 @@ ggsave("fig_6_4.png", fig_6_4, width = 6, height = 4.25)
 
 ## Poisson regression
 pass_fit_r <-
-    glm(pass_td_y ~ pass_td_rate + total_line,
+    glm(pass_td_y ~ pass_td_rate.x + total_line,
         data = pbp_r_pass_td_y_geq10, family = "poisson"
     )
 
