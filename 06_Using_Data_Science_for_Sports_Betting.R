@@ -95,7 +95,7 @@ for (season_idx in seq(2017, 2022)) {
 
 ## look at example output
 x_r |>
-    filter(passer == "P.Mahomes") |>
+    filter(passer == "T.Brady") |>
     tail()
 
 ## include game totals
